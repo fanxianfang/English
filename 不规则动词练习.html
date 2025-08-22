@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>不规则动词练习</title>
+  <style>
+    :root{--bg:#f7f7f8;--card:#ffffff;--accent:#2b8aef;--ok:#28a745;--bad:#dc3545;--muted:#6b7280}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:18px}
+    .wrap{width:100%;max-width:740px}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    h1{font-size:18px;margin:0}
+    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 4px 18px rgba(20,20,30,0.06)}
+    .verb-large{font-size:36px;font-weight:700;letter-spacing:0.6px;margin:8px 0}
+    .row{display:flex;gap:8px}
+    .input{flex:1}
+    input[type=text]{width:100%;padding:12px;border-radius:8px;border:1px solid #e6e7eb;font-size:16px}
+    input[type=text].ok{border-color:var(--ok);background:rgba(40,167,69,0.06)}
+    input[type=text].bad{border-color:var(--bad);background:rgba(220,53,69,0.04)}
+    select{width:100%;padding:10px;border-radius:8px;margin-bottom:8px;font-size:16px}
+    .controls{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    button{padding:10px 12px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:600}
+    button.secondary{background:#f1f5f9;color:#111;border:1px solid #e6e7eb}
+    .muted{color:var(--muted);font-size:13px}
+    .status{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:14px}
+    .status .dot{width:12px;height:12px;border-radius:50%}
+    .progress{height:8px;background:#e9ecef;border-radius:8px;overflow:hidden;margin-top:10px}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#6bdeff)}
+    footer{margin-top:12px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:420px){.verb-large{font-size:28px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1></h1>
+      <div class="muted"></div>
+    </header>
+
+    <div class="card" id="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="muted">序号 <span id="index">1</span> / 150</div>
+        <div class="muted">已答对 <span id="correctCount">0</span></div>
+      </div>
+
+      <div style="text-align:center;margin-top:8px">
+        <div class="verb-large" id="baseVerb">be</div>
+        <div class="muted" id="hint"></div>
+        <div class="muted" id="meaning">是，存在</div>
+      </div>
+
+      <div style="margin-top:8px">
+        <select id="verbSelect"><option value="all">选择动词练习</option><option value="0">be - 是，存在</option><option value="1">have - 有</option><option value="2">do - 做</option><option value="3">say - 说</option><option value="4">go - 去</option><option value="5">get - 得到</option><option value="6">make - 制造</option><option value="7">know - 知道</option><option value="8">think - 想</option><option value="9">take - 拿</option><option value="10">see - 看见</option><option value="11">come - 来</option><option value="12">find - 找到</option><option value="13">give - 给</option><option value="14">tell - 告诉</option><option value="15">become - 变成</option><option value="16">show - 显示</option><option value="17">leave - 离开</option><option value="18">feel - 感觉</option><option value="19">put - 放</option></select>
+      </div>
+
+      <div style="margin-top:12px">
+        <label class="muted">过去式 (Past Simple)</label>
+        <input id="pastInput" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" placeholder="" class="ok">
+      </div>
+
+      <div style="margin-top:10px">
+        <label class="muted">过去分词 (Past Participle)</label>
+        <input id="ppInput" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" placeholder="" class="ok">
+      </div>
+
+      <div class="controls">
+        <button id="checkBtn">检查</button>
+        <button class="secondary" id="nextBtn">下一个</button>
+        <button class="secondary" id="showBtn">显示答案</button>
+        <button class="secondary" id="shuffleBtn">随机顺序</button>
+      </div>
+
+      <div class="status">
+        <div class="dot" id="dot" style="background: var(--accent);"></div>
+        <div id="message">已显示答案</div>
+      </div>
+
+      <div class="progress" aria-hidden="true">
+        <i id="prog" style="width:0%"></i>
+      </div>
+    </div>
+
+    <footer>
+      
+    </footer>
+  </div>
+
+  <script>
+    const verbs = [
+      {base:'be', past:'was/were', pp:'been', meaning:'是，存在'},
+      {base:'have', past:'had', pp:'had', meaning:'有'},
+      {base:'do', past:'did', pp:'done', meaning:'做'},
+      {base:'say', past:'said', pp:'said', meaning:'说'},
+      {base:'go', past:'went', pp:'gone', meaning:'去'},
+      {base:'get', past:'got', pp:'got/gotten', meaning:'得到'},
+      {base:'make', past:'made', pp:'made', meaning:'制造'},
+      {base:'know', past:'knew', pp:'known', meaning:'知道'},
+      {base:'think', past:'thought', pp:'thought', meaning:'想'},
+      {base:'take', past:'took', pp:'taken', meaning:'拿'},
+      {base:'see', past:'saw', pp:'seen', meaning:'看见'},
+      {base:'come', past:'came', pp:'come', meaning:'来'},
+      {base:'find', past:'found', pp:'found', meaning:'找到'},
+      {base:'give', past:'gave', pp:'given', meaning:'给'},
+      {base:'tell', past:'told', pp:'told', meaning:'告诉'},
+      {base:'become', past:'became', pp:'become', meaning:'变成'},
+      {base:'show', past:'showed', pp:'shown', meaning:'显示'},
+      {base:'leave', past:'left', pp:'left', meaning:'离开'},
+      {base:'feel', past:'felt', pp:'felt', meaning:'感觉'},
+      {base:'put', past:'put', pp:'put', meaning:'放'},
+      // 此处省略剩余动词，可按原有列表添加含 meaning
+    ];
+
+    let order = Array.from({length: verbs.length}, (_,i)=>i);
+    let idx = 0;
+    let correctCount = 0;
+
+    const baseEl = document.getElementById('baseVerb');
+    const indexEl = document.getElementById('index');
+    const pastInput = document.getElementById('pastInput');
+    const ppInput = document.getElementById('ppInput');
+    const checkBtn = document.getElementById('checkBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const showBtn = document.getElementById('showBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const message = document.getElementById('message');
+    const dot = document.getElementById('dot');
+    const prog = document.getElementById('prog');
+    const correctCountEl = document.getElementById('correctCount');
+    const meaningEl = document.getElementById('meaning');
+    const verbSelect = document.getElementById('verbSelect');
+
+    verbs.forEach((v,i)=>{
+      const option = document.createElement('option');
+      option.value=i; option.textContent=v.base+' - '+v.meaning;
+      verbSelect.appendChild(option);
+    });
+
+    verbSelect.addEventListener('change',()=>{
+      const val = verbSelect.value;
+      if(val==='all') idx=0; else idx=parseInt(val);
+      render();
+    });
+
+    function render(){
+      const i = order[idx];
+      const v = verbs[i];
+      baseEl.textContent = v.base;
+      meaningEl.textContent = v.meaning;
+      indexEl.textContent = idx + 1;
+      pastInput.value = '';
+      ppInput.value = '';
+      pastInput.className = '';
+      ppInput.className = '';
+      message.textContent = '等待输入 → 输入后点击"检查"或按回车';
+      dot.style.background = '#ffd43b';
+      updateProgress();
+      pastInput.focus();
+    }
+
+    function normalize(s){return (s||'').trim().toLowerCase();}
+    function acceptedAnswers(text){return text.split('/').map(x=>x.trim().toLowerCase());}
+
+    function check(){
+      const i = order[idx];
+      const v = verbs[i];
+      const userPast = normalize(pastInput.value);
+      const userPP = normalize(ppInput.value);
+      const pastOpts = acceptedAnswers(v.past);
+      const ppOpts = acceptedAnswers(v.pp);
+      const pastOK = pastOpts.includes(userPast);
+      const ppOK = ppOpts.includes(userPP);
+      pastInput.className = pastOK? 'ok' : 'bad';
+      ppInput.className = ppOK? 'ok' : 'bad';
+      if(pastOK && ppOK){
+        message.textContent = '回答正确 🎉🎉🎉';
+        dot.style.background = 'var(--ok)';
+        correctCount += 1;
+        correctCountEl.textContent = correctCount;
+        setTimeout(()=>{ next(false); }, 500);
+      } else {
+        message.textContent = '有错误，请检查红色框或点击"显示答案"查看正确答案';
+        dot.style.background = 'var(--bad)';
+      }
+    }
+
+    function next(forceShuffleIfEnd=true){
+      idx++; if(idx>=order.length){
+        message.textContent='练习完成。点击"随机顺序"再次开始或点击"下一个"重新开始。';
+        dot.style.background='var(--muted)';
+        idx=0; correctCount=0; correctCountEl.textContent=correctCount;
+        if(forceShuffleIfEnd) shuffleOrder();
+      }
+      render();
+    }
+
+    function showAnswer(){
+      const i = order[idx]; const v = verbs[i];
+      pastInput.value = v.past; ppInput.value = v.pp;
+      pastInput.className = 'ok'; ppInput.className='ok';
+      message.textContent = '已显示答案'; dot.style.background='var(--accent)';
+    }
+
+    function shuffleOrder(){
+      for(let i=order.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]];
+      }
+      idx=0; correctCount=0; correctCountEl.textContent=correctCount;
+      render();
+    }
+
+    function updateProgress(){const percent=Math.round((idx/order.length)*100); prog.style.width=percent+'%';}
+
+    checkBtn.addEventListener('click', check);
+    nextBtn.addEventListener('click', ()=>next(true));
+    showBtn.addEventListener('click', showAnswer);
+    shuffleBtn.addEventListener('click', ()=>{ shuffleOrder(); message.textContent='已随机打乱顺序'; });
+    [pastInput, ppInput].forEach(inp=>{inp.addEventListener('keydown',(e)=>{if(e.key==='Enter'){check();}});});
+
+    render();
+    if('wakeLock' in navigator){try{navigator.wakeLock.request('screen');}catch(e){}}
+  </script>
+</body>
+</html>
