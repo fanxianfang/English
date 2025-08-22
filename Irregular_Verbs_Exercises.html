@@ -143,6 +143,19 @@
       background: linear-gradient(135deg, #f8fafc, #f1f5f9);
       border-radius: 16px;
       border: 1px solid var(--border);
+      /* 确保只有一个动词显示区域 */
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* 防止重复显示 */
+    .verb-section:not(:first-of-type) {
+      display: none;
+    }
+    
+    /* 确保动词选择器只显示一个 */
+    .verb-selector:not(:first-of-type) {
+      display: none;
     }
     
     .verb-large {
@@ -1101,6 +1114,35 @@
       }
     }
 
+    // 清理页面，确保没有重复元素
+    function cleanupPage() {
+      // 移除所有重复的verb-section元素
+      const verbSections = document.querySelectorAll('.verb-section');
+      if (verbSections.length > 1) {
+        for (let i = 1; i < verbSections.length; i++) {
+          verbSections[i].remove();
+        }
+      }
+      
+      // 移除所有重复的verb-selector元素
+      const verbSelectors = document.querySelectorAll('.verb-selector');
+      if (verbSelectors.length > 1) {
+        for (let i = 1; i < verbSelectors.length; i++) {
+          verbSelectors[i].remove();
+        }
+      }
+      
+      // 确保只有一个card元素
+      const cards = document.querySelectorAll('.card');
+      if (cards.length > 1) {
+        for (let i = 1; i < cards.length; i++) {
+          cards[i].remove();
+        }
+      }
+      
+      console.log('页面清理完成，确保只有一个动词显示区域');
+    }
+
     const verbs = [
       {base:'be', past:'was/were', pp:'been', meaning:'是，存在'},
       {base:'have', past:'had', pp:'had', meaning:'有'},
@@ -1303,17 +1345,44 @@
     function render(){
       const i = order[idx];
       const v = verbs[i];
+      
+      // 确保所有显示元素都使用同一个动词信息
       baseEl.textContent = v.base;
       meaningEl.textContent = v.meaning;
       indexEl.textContent = idx + 1;
+      
+      // 清空输入框
       pastInput.value = '';
       ppInput.value = '';
       pastInput.className = 'input-field';
       ppInput.className = 'input-field';
+      
+      // 更新状态信息
       message.textContent = '等待输入 → 输入后点击"检查答案"或按回车';
       dot.style.background = '#fbbf24';
+      
+      // 更新进度
       updateProgress();
+      
+      // 聚焦到第一个输入框
       pastInput.focus();
+      
+      // 调试信息：确保动词信息一致
+      console.log('当前动词:', v.base, '-', v.meaning);
+      console.log('显示元素:', baseEl.textContent, meaningEl.textContent);
+      
+      // 额外检查：确保页面显示正确的动词信息
+      setTimeout(() => {
+        // 再次检查显示的元素
+        if (baseEl.textContent !== v.base || meaningEl.textContent !== v.meaning) {
+          console.warn('动词信息不一致，重新设置...');
+          baseEl.textContent = v.base;
+          meaningEl.textContent = v.meaning;
+        }
+        
+        // 清理可能的重复元素
+        cleanupPage();
+      }, 50);
     }
 
     function normalize(s){return (s||'').trim().toLowerCase();}
@@ -1503,6 +1572,9 @@
     setTimeout(() => {
       checkContentFit();
     }, 100);
+    
+    // 清理页面，确保没有重复元素
+    cleanupPage();
     
     // 保持屏幕唤醒（如果支持）
     if('wakeLock' in navigator){
