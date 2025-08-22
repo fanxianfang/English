@@ -86,7 +86,7 @@
     .card {
       background: var(--card);
       border-radius: 20px;
-      padding: 32px;
+      padding: 24px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -108,7 +108,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
       gap: 12px;
     }
@@ -138,8 +138,8 @@
     
     .verb-section {
       text-align: center;
-      margin: 32px 0;
-      padding: 24px;
+      margin: 24px 0;
+      padding: 20px;
       background: linear-gradient(135deg, #f8fafc, #f1f5f9);
       border-radius: 16px;
       border: 1px solid var(--border);
@@ -149,7 +149,7 @@
       font-size: 48px;
       font-weight: 800;
       letter-spacing: -0.5px;
-      margin: 16px 0;
+      margin: 12px 0;
       background: linear-gradient(135deg, #667eea, #764ba2);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -159,19 +159,19 @@
     .meaning {
       font-size: 18px;
       color: var(--muted);
-      margin-top: 8px;
+      margin-top: 6px;
       font-weight: 500;
     }
     
     .hint {
       font-size: 14px;
       color: var(--accent);
-      margin-top: 8px;
+      margin-top: 6px;
       font-style: italic;
     }
     
     .verb-selector {
-      margin: 24px 0;
+      margin: 20px 0;
     }
     
     select {
@@ -192,12 +192,12 @@
     }
     
     .input-group {
-      margin: 20px 0;
+      margin: 18px 0;
     }
     
     .input-label {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-weight: 600;
       color: var(--text);
       font-size: 14px;
@@ -235,7 +235,7 @@
     .controls {
       display: flex;
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 20px;
       flex-wrap: wrap;
     }
     
@@ -280,8 +280,8 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-top: 20px;
-      padding: 16px;
+      margin-top: 16px;
+      padding: 14px;
       background: #f8fafc;
       border-radius: 12px;
       border: 1px solid var(--border);
@@ -309,7 +309,7 @@
       background: #e5e7eb;
       border-radius: 4px;
       overflow: hidden;
-      margin-top: 16px;
+      margin-top: 12px;
     }
     
     .progress-fill {
@@ -320,7 +320,7 @@
     }
     
     .footer {
-      margin-top: 24px;
+      margin-top: 20px;
       text-align: center;
       color: rgba(255, 255, 255, 0.8);
       font-size: 14px;
@@ -333,20 +333,24 @@
       }
       
       .card {
-        padding: 24px 20px;
-        margin: 0 8px;
+        padding: 20px 16px;
+        margin: 0 4px;
       }
       
       .verb-large {
-        font-size: 36px;
+        font-size: 32px;
+        margin: 12px 0;
       }
       
       .controls {
         flex-direction: column;
+        gap: 8px;
       }
       
       button {
         min-width: auto;
+        padding: 12px 16px;
+        font-size: 14px;
       }
       
       .stats {
@@ -357,59 +361,63 @@
       .progress-info {
         flex-direction: column;
         align-items: stretch;
-        gap: 16px;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      
+      .verb-section {
+        margin: 20px 0;
+        padding: 16px;
+      }
+      
+      .input-group {
+        margin: 16px 0;
+      }
+      
+      .status {
+        margin-top: 16px;
+        padding: 12px;
       }
     }
     
     @media (max-width: 480px) {
-      body {
-        padding: 12px;
-      }
-      
-      .card {
-        padding: 20px 16px;
-      }
-      
-      .verb-large {
-        font-size: 32px;
-      }
-      
-      .verb-section {
-        padding: 20px 16px;
-      }
-      
-      .input-field {
-        padding: 14px;
-        font-size: 16px;
-      }
-      
-      select {
-        padding: 14px;
-        font-size: 16px;
-      }
-    }
-    
-    /* 超小屏幕适配 */
-    @media (max-width: 360px) {
       body {
         padding: 8px;
       }
       
       .card {
         padding: 16px 12px;
-        margin: 0 4px;
+        margin: 0 2px;
       }
       
       .verb-large {
         font-size: 28px;
+        margin: 8px 0;
       }
       
       .meaning {
         font-size: 16px;
+        margin-top: 6px;
+      }
+      
+      .verb-section {
+        padding: 16px 12px;
+        margin: 16px 0;
+      }
+      
+      .input-field {
+        padding: 12px;
+        font-size: 16px;
+      }
+      
+      select {
+        padding: 12px;
+        font-size: 16px;
       }
       
       .progress-info {
-        gap: 12px;
+        gap: 8px;
+        margin-bottom: 12px;
       }
       
       .progress-item {
@@ -418,17 +426,122 @@
       
       .accuracy-display {
         font-size: 12px;
-        padding: 6px 12px;
+        padding: 6px 10px;
+      }
+      
+      .input-group {
+        margin: 12px 0;
+      }
+      
+      .input-label {
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+      
+      .controls {
+        margin-top: 16px;
+        gap: 6px;
+      }
+      
+      .status {
+        margin-top: 12px;
+        padding: 10px;
+      }
+      
+      .status-message {
+        font-size: 13px;
+      }
+      
+      .progress-bar {
+        margin-top: 12px;
+      }
+      
+      .footer {
+        margin-top: 16px;
+        font-size: 12px;
+      }
+    }
+    
+    /* 超小屏幕适配 */
+    @media (max-width: 360px) {
+      body {
+        padding: 6px;
+      }
+      
+      .card {
+        padding: 12px 8px;
+        margin: 0;
+      }
+      
+      .verb-large {
+        font-size: 24px;
+        margin: 6px 0;
+      }
+      
+      .meaning {
+        font-size: 14px;
+        margin-top: 4px;
+      }
+      
+      .progress-info {
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+      
+      .progress-item {
+        font-size: 11px;
+      }
+      
+      .accuracy-display {
+        font-size: 11px;
+        padding: 4px 8px;
       }
       
       button {
-        padding: 12px 16px;
-        font-size: 14px;
+        padding: 10px 12px;
+        font-size: 13px;
       }
       
       .input-field, select {
-        padding: 12px;
+        padding: 10px;
         font-size: 16px;
+      }
+      
+      .verb-section {
+        padding: 12px 8px;
+        margin: 12px 0;
+      }
+      
+      .input-group {
+        margin: 10px 0;
+      }
+      
+      .input-label {
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+      
+      .controls {
+        margin-top: 12px;
+        gap: 4px;
+      }
+      
+      .status {
+        margin-top: 10px;
+        padding: 8px;
+      }
+      
+      .status-message {
+        font-size: 12px;
+      }
+      
+      .progress-bar {
+        margin-top: 10px;
+      }
+      
+      .footer {
+        margin-top: 12px;
+        font-size: 11px;
       }
     }
     
@@ -539,6 +652,87 @@
     .compact-layout .status {
       margin-top: 16px;
       padding: 12px;
+    }
+    
+    /* 超紧凑模式 - 确保在手机上完整显示 */
+    .ultra-compact .card {
+      padding: 12px;
+    }
+    
+    .ultra-compact .progress-info {
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    
+    .ultra-compact .progress-item {
+      font-size: 11px;
+    }
+    
+    .ultra-compact .accuracy-display {
+      font-size: 11px;
+      padding: 4px 8px;
+    }
+    
+    .ultra-compact .verb-section {
+      margin: 12px 0;
+      padding: 12px;
+    }
+    
+    .ultra-compact .verb-large {
+      font-size: 24px;
+      margin: 6px 0;
+    }
+    
+    .ultra-compact .meaning {
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    
+    .ultra-compact .verb-selector {
+      margin: 16px 0;
+    }
+    
+    .ultra-compact .input-group {
+      margin: 10px 0;
+    }
+    
+    .ultra-compact .input-label {
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    
+    .ultra-compact .input-field,
+    .ultra-compact select {
+      padding: 10px;
+      font-size: 16px;
+    }
+    
+    .ultra-compact .controls {
+      margin-top: 12px;
+      gap: 6px;
+    }
+    
+    .ultra-compact button {
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    
+    .ultra-compact .status {
+      margin-top: 10px;
+      padding: 8px;
+    }
+    
+    .ultra-compact .status-message {
+      font-size: 12px;
+    }
+    
+    .ultra-compact .progress-bar {
+      margin-top: 8px;
+    }
+    
+    .ultra-compact .footer {
+      margin-top: 10px;
+      font-size: 11px;
     }
     
     /* 触摸设备样式 */
@@ -764,6 +958,8 @@
           updateProgress();
           // 调整字体大小
           adjustFontSize();
+          // 检查内容是否适合屏幕
+          checkContentFit();
         }, 250);
       });
       
@@ -838,11 +1034,70 @@
         document.documentElement.style.fontSize = '20px';
       }
       
-      // 根据视口高度调整垂直间距
+      // 根据视口高度调整布局模式
       if (viewportHeight < 600) {
         document.body.classList.add('compact-layout');
-      } else {
+        document.body.classList.remove('ultra-compact');
+      } else if (viewportHeight < 700) {
+        document.body.classList.add('ultra-compact');
         document.body.classList.remove('compact-layout');
+      } else {
+        document.body.classList.remove('compact-layout', 'ultra-compact');
+      }
+      
+      // 特殊处理：如果屏幕高度小于500px，强制使用超紧凑模式
+      if (viewportHeight < 500) {
+        document.body.classList.add('ultra-compact');
+        document.body.classList.remove('compact-layout');
+      }
+    }
+
+    // 检测内容是否超出屏幕并自动调整
+    function checkContentFit() {
+      const card = document.getElementById('card');
+      const cardHeight = card.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      const availableHeight = viewportHeight - 40; // 减去一些边距
+      
+      // 如果内容高度超出可用高度，应用超紧凑模式
+      if (cardHeight > availableHeight) {
+        document.body.classList.add('ultra-compact');
+        document.body.classList.remove('compact-layout');
+        
+        // 重新检查是否还需要进一步压缩
+        setTimeout(() => {
+          const newCardHeight = card.offsetHeight;
+          if (newCardHeight > availableHeight) {
+            // 如果还是超出，添加额外的内联样式来进一步压缩
+            card.style.padding = '8px';
+            card.style.margin = '0';
+            
+            // 压缩各个元素
+            const verbSection = document.querySelector('.verb-section');
+            if (verbSection) {
+              verbSection.style.padding = '8px';
+              verbSection.style.margin = '8px 0';
+            }
+            
+            const progressInfo = document.querySelector('.progress-info');
+            if (progressInfo) {
+              progressInfo.style.gap = '4px';
+              progressInfo.style.marginBottom = '6px';
+            }
+            
+            const controls = document.querySelector('.controls');
+            if (controls) {
+              controls.style.gap = '4px';
+              controls.style.marginTop = '8px';
+            }
+            
+            const status = document.querySelector('.status');
+            if (status) {
+              status.style.padding = '6px';
+              status.style.marginTop = '8px';
+            }
+          }
+        }, 100);
       }
     }
 
@@ -1243,6 +1498,11 @@
     render();
     updateAccuracy();
     initAdaptiveFeatures(); // 调用自适应功能
+    
+    // 延迟检查内容是否适合屏幕
+    setTimeout(() => {
+      checkContentFit();
+    }, 100);
     
     // 保持屏幕唤醒（如果支持）
     if('wakeLock' in navigator){
