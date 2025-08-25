@@ -334,6 +334,107 @@
       font-size: 14px;
     }
     
+    /* 错误单词复习区域样式 */
+    .error-review-section {
+      background: linear-gradient(135deg, #fef2f2, #fecaca);
+      border: 2px solid #fca5a5;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+    }
+    
+    .error-review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .error-review-header h3 {
+      margin: 0;
+      color: #dc2626;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    
+    .error-count {
+      background: #dc2626;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .error-words-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      border: 1px solid #fca5a5;
+    }
+    
+    .error-word-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #fecaca;
+      transition: all 0.3s ease;
+    }
+    
+    .error-word-item:hover {
+      border-color: #fca5a5;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+    }
+    
+    .error-word-info {
+      flex: 1;
+    }
+    
+    .error-word-base {
+      font-weight: 600;
+      color: #dc2626;
+      font-size: 16px;
+    }
+    
+    .error-word-meaning {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+    
+    .error-word-remove {
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .error-word-remove:hover {
+      background: #b91c1c;
+      transform: scale(1.05);
+    }
+    
+    .error-review-controls {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .error-review-controls button {
+      flex: 1;
+    }
+    
     /* 响应式设计 */
     @media (max-width: 768px) {
       .wrap {
@@ -957,6 +1058,36 @@
         font-weight: 500;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
       }
+      
+      /* 深色模式下的错误复习区域 */
+      .error-review-section {
+        background: linear-gradient(135deg, #450a0a, #7f1d1d);
+        border-color: #dc2626;
+      }
+      
+      .error-words-list {
+        background: rgba(31, 41, 55, 0.8);
+        border-color: #dc2626;
+      }
+      
+      .error-word-item {
+        background: #374151;
+        border-color: #7f1d1d;
+        color: #f9fafb;
+      }
+      
+      .error-word-item:hover {
+        border-color: #dc2626;
+        background: #4b5563;
+      }
+      
+      .error-word-base {
+        color: #fca5a5;
+      }
+      
+      .error-word-meaning {
+        color: #9ca3af;
+      }
     }
   </style>
 </head>
@@ -990,6 +1121,21 @@
         </select>
       </div>
 
+      <!-- 错误单词复习区域 -->
+      <div class="error-review-section" id="errorReviewSection" style="display: none;">
+        <div class="error-review-header">
+          <h3>错误单词复习</h3>
+          <span class="error-count" id="errorCount">0个错误单词</span>
+        </div>
+        <div class="error-words-list" id="errorWordsList">
+          <!-- 错误单词列表将在这里动态生成 -->
+        </div>
+        <div class="error-review-controls">
+          <button id="startReviewBtn" class="primary">开始复习</button>
+          <button id="clearErrorsBtn" class="secondary">清空错误记录</button>
+        </div>
+      </div>
+
       <div class="input-group">
         <label class="input-label">过去式 (Past Simple)</label>
         <input id="pastInput" type="text" class="input-field" autocomplete="off" autocapitalize="none" autocorrect="off" placeholder="请输入过去式">
@@ -1005,6 +1151,7 @@
         <button class="secondary" id="nextBtn">下一个</button>
         <button class="secondary" id="showBtn">显示答案</button>
         <button class="secondary" id="shuffleBtn">随机顺序</button>
+        <button class="secondary" id="reviewBtn">错误复习</button>
       </div>
 
       <div class="status">
@@ -1373,6 +1520,122 @@
     const meaningEl = document.getElementById('meaning');
     const verbSelect = document.getElementById('verbSelect');
     const accuracyDisplay = document.getElementById('accuracyDisplay');
+    const reviewBtn = document.getElementById('reviewBtn');
+    const errorReviewSection = document.getElementById('errorReviewSection');
+    const errorWordsList = document.getElementById('errorWordsList');
+    const errorCount = document.getElementById('errorCount');
+    const startReviewBtn = document.getElementById('startReviewBtn');
+    const clearErrorsBtn = document.getElementById('clearErrorsBtn');
+
+    // 错误单词管理
+    let errorWords = [];
+    let isReviewMode = false;
+    let reviewIndex = 0;
+
+    // 从localStorage加载错误单词
+    function loadErrorWords() {
+      const saved = localStorage.getItem('irregularVerbsErrors');
+      if (saved) {
+        errorWords = JSON.parse(saved);
+        updateErrorDisplay();
+      }
+    }
+
+    // 保存错误单词到localStorage
+    function saveErrorWords() {
+      localStorage.setItem('irregularVerbsErrors', JSON.stringify(errorWords));
+    }
+
+    // 添加错误单词
+    function addErrorWord(verb) {
+      const existingIndex = errorWords.findIndex(item => item.base === verb.base);
+      if (existingIndex === -1) {
+        errorWords.push({
+          base: verb.base,
+          past: verb.past,
+          pp: verb.pp,
+          meaning: verb.meaning,
+          timestamp: Date.now()
+        });
+        saveErrorWords();
+        updateErrorDisplay();
+      }
+    }
+
+    // 移除错误单词
+    function removeErrorWord(base) {
+      errorWords = errorWords.filter(item => item.base !== base);
+      saveErrorWords();
+      updateErrorDisplay();
+    }
+
+    // 更新错误显示
+    function updateErrorDisplay() {
+      errorCount.textContent = `${errorWords.length}个错误单词`;
+      
+      if (errorWords.length === 0) {
+        errorReviewSection.style.display = 'none';
+        return;
+      }
+      
+      // 生成错误单词列表
+      errorWordsList.innerHTML = '';
+      errorWords.forEach(word => {
+        const wordItem = document.createElement('div');
+        wordItem.className = 'error-word-item';
+        wordItem.innerHTML = `
+          <div class="error-word-info">
+            <div class="error-word-base">${word.base}</div>
+            <div class="error-word-meaning">${word.meaning}</div>
+          </div>
+          <button class="error-word-remove" onclick="removeErrorWord('${word.base}')">移除</button>
+        `;
+        errorWordsList.appendChild(wordItem);
+      });
+    }
+
+    // 开始复习模式
+    function startReviewMode() {
+      if (errorWords.length === 0) {
+        alert('没有错误单词需要复习！');
+        return;
+      }
+      
+      isReviewMode = true;
+      reviewIndex = 0;
+      errorReviewSection.style.display = 'none';
+      
+      // 切换到第一个错误单词
+      const firstError = errorWords[0];
+      const verbIndex = verbs.findIndex(v => v.base === firstError.base);
+      if (verbIndex !== -1) {
+        idx = verbIndex;
+        render();
+        message.textContent = '复习模式：请回答这个错误单词';
+        dot.style.background = '#fbbf24';
+      }
+    }
+
+    // 退出复习模式
+    function exitReviewMode() {
+      isReviewMode = false;
+      reviewIndex = 0;
+      errorReviewSection.style.display = 'block';
+      message.textContent = '等待输入 → 输入后点击"检查答案"或按回车';
+      dot.style.background = '#fbbf24';
+    }
+
+    // 清空错误记录
+    function clearErrorWords() {
+      if (confirm('确定要清空所有错误记录吗？此操作不可恢复。')) {
+        errorWords = [];
+        saveErrorWords();
+        updateErrorDisplay();
+        if (isReviewMode) {
+          exitReviewMode();
+        }
+      }
+    }
 
     // 动态生成动词选择器选项
     verbs.forEach((v,i)=>{
@@ -1489,14 +1752,42 @@
         dot.style.background = 'var(--ok)';
         correctCount += 1;
         correctCountEl.textContent = correctCount;
+        
+        // 如果答对了，从错误单词列表中移除
+        if (isReviewMode) {
+          removeErrorWord(v.base);
+          if (errorWords.length === 0) {
+            // 所有错误单词都复习完了
+            setTimeout(() => {
+              alert('恭喜！所有错误单词都复习完成了！🎊');
+              exitReviewMode();
+            }, 500);
+          } else {
+            // 继续复习下一个错误单词
+            setTimeout(() => {
+              reviewIndex++;
+              const nextError = errorWords[reviewIndex % errorWords.length];
+              const verbIndex = verbs.findIndex(verb => verb.base === nextError.base);
+              if (verbIndex !== -1) {
+                idx = verbIndex;
+                render();
+                message.textContent = `复习模式：请回答这个错误单词 (${reviewIndex + 1}/${errorWords.length})`;
+              }
+            }, 800);
+          }
+        } else {
+          // 正常模式，自动进入下一个
+          setTimeout(()=>{ next(false); }, 800);
+        }
+        
         updateAccuracy();
-        setTimeout(()=>{ next(false); }, 800);
       } else {
         message.textContent = '有错误，请检查红色框或点击"显示答案"查看正确答案';
         dot.style.background = 'var(--bad)';
         wrongCount += 1;
         wrongCountEl.textContent = wrongCount;
         updateAccuracy();
+        addErrorWord(v); // 添加错误单词
       }
     }
 
@@ -1554,6 +1845,15 @@
       shuffleOrder(); 
       message.textContent='已随机打乱顺序 🔀'; 
     });
+    reviewBtn.addEventListener('click', ()=>{
+      if (errorWords.length === 0) {
+        alert('没有错误单词需要复习！');
+        return;
+      }
+      errorReviewSection.style.display = 'block';
+    });
+    startReviewBtn.addEventListener('click', startReviewMode);
+    clearErrorsBtn.addEventListener('click', clearErrorWords);
     
     [pastInput, ppInput].forEach(inp=>{
       inp.addEventListener('keydown',(e)=>{
@@ -1606,6 +1906,12 @@
     render();
     updateAccuracy();
     initAdaptiveFeatures(); // 调用自适应功能
+    loadErrorWords(); // 加载错误单词
+    
+    // 如果有错误单词，显示复习区域
+    if (errorWords.length > 0) {
+      errorReviewSection.style.display = 'block';
+    }
     
     // 延迟检查内容是否适合屏幕
     setTimeout(() => {
