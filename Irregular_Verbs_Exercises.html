@@ -269,11 +269,19 @@
       background: white;
       color: var(--text);
       border: 2px solid var(--border);
+      font-weight: 600;
     }
     
     button.secondary:hover {
       border-color: var(--accent);
       color: var(--accent);
+      background: #f8fafc;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+    
+    button.secondary:active {
+      background: #f1f5f9;
+      transform: translateY(0);
     }
     
     .status {
@@ -751,6 +759,19 @@
       touch-action: manipulation;
     }
     
+    /* 深色模式下的触摸设备优化 */
+    @media (prefers-color-scheme: dark) {
+      .touch-device button.secondary {
+        -webkit-tap-highlight-color: rgba(156, 163, 175, 0.3);
+      }
+      
+      .touch-device button.secondary:active {
+        background: #374151;
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+      }
+    }
+    
     /* 高分辨率屏幕优化 */
     @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
       .card::before {
@@ -843,17 +864,98 @@
       .verb-section {
         background: linear-gradient(135deg, #374151, #4b5563);
         border-color: #4b5563;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+      
+      /* 深色模式下的动词原型优化 */
+      .verb-large {
+        background: linear-gradient(135deg, #ffffff, #e5e7eb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.1));
+        /* 备用方案：如果渐变不支持，使用纯白色 */
+        color: #ffffff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      
+      /* 确保深色模式下动词原型清晰可见 */
+      @media (prefers-color-scheme: dark) and (max-width: 768px) {
+        .verb-large {
+          background: none;
+          -webkit-background-clip: unset;
+          -webkit-text-fill-color: unset;
+          background-clip: unset;
+          color: #ffffff;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+          font-weight: 900;
+        }
       }
       
       .input-field, select {
         background: #374151;
         color: #f9fafb;
-        border-color: #4b5563;
+        border-color: #4b7280;
       }
       
       .status {
         background: #374151;
         border-color: #4b5563;
+      }
+      
+      /* 深色模式下的按钮优化 */
+      button.secondary {
+        background: #4b5563;
+        color: #ffffff;
+        border-color: #6b7280;
+        font-weight: 600;
+      }
+      
+      button.secondary:hover {
+        background: #6b7280;
+        border-color: #9ca3af;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(156, 163, 175, 0.3);
+      }
+      
+      button.secondary:active {
+        background: #374151;
+        transform: translateY(0);
+      }
+      
+      /* 深色模式下的输入标签 */
+      .input-label {
+        color: #f9fafb;
+        font-weight: 600;
+      }
+      
+      /* 深色模式下的进度信息 */
+      .progress-item {
+        color: #d1d5db;
+        font-weight: 500;
+      }
+      
+      .progress-number {
+        color: #60a5fa;
+        font-weight: 700;
+      }
+      
+      /* 深色模式下的状态信息 */
+      .status-message {
+        color: #f9fafb;
+        font-weight: 500;
+      }
+      
+      /* 深色模式下的提示文字 */
+      .hint {
+        color: #60a5fa;
+      }
+      
+      /* 深色模式下的含义文字 */
+      .meaning {
+        color: #d1d5db;
+        font-weight: 500;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
       }
     }
   </style>
