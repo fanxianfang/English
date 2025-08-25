@@ -429,10 +429,45 @@
     .error-review-controls {
       display: flex;
       gap: 12px;
+      flex-wrap: wrap;
     }
     
     .error-review-controls button {
       flex: 1;
+      min-width: 120px;
+    }
+    
+    /* 小屏幕上的按钮布局 */
+    @media (max-width: 480px) {
+      .error-review-controls {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .error-review-controls button {
+        min-width: auto;
+        width: 100%;
+      }
+    }
+    
+    /* 返回按钮特殊样式 */
+    #backToNormalBtn {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      border: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    #backToNormalBtn:hover {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+    
+    #backToNormalBtn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
     }
     
     /* 响应式设计 */
@@ -1088,6 +1123,19 @@
       .error-word-meaning {
         color: #9ca3af;
       }
+      
+      /* 深色模式下的返回按钮 */
+      #backToNormalBtn {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        border: 1px solid #f59e0b;
+      }
+      
+      #backToNormalBtn:hover {
+        background: linear-gradient(135deg, #d97706, #b45309);
+        border-color: #d97706;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+      }
     }
   </style>
 </head>
@@ -1133,6 +1181,7 @@
         <div class="error-review-controls">
           <button id="startReviewBtn" class="primary">开始复习</button>
           <button id="clearErrorsBtn" class="secondary">清空错误记录</button>
+          <button id="backToNormalBtn" class="secondary">返回正常模式</button>
         </div>
       </div>
 
@@ -1526,6 +1575,7 @@
     const errorCount = document.getElementById('errorCount');
     const startReviewBtn = document.getElementById('startReviewBtn');
     const clearErrorsBtn = document.getElementById('clearErrorsBtn');
+    const backToNormalBtn = document.getElementById('backToNormalBtn');
 
     // 错误单词管理
     let errorWords = [];
@@ -1620,7 +1670,7 @@
     function exitReviewMode() {
       isReviewMode = false;
       reviewIndex = 0;
-      errorReviewSection.style.display = 'block';
+      errorReviewSection.style.display = 'none'; // 隐藏整个错误复习区域
       message.textContent = '等待输入 → 输入后点击"检查答案"或按回车';
       dot.style.background = '#fbbf24';
     }
@@ -1854,6 +1904,7 @@
     });
     startReviewBtn.addEventListener('click', startReviewMode);
     clearErrorsBtn.addEventListener('click', clearErrorWords);
+    backToNormalBtn.addEventListener('click', exitReviewMode);
     
     [pastInput, ppInput].forEach(inp=>{
       inp.addEventListener('keydown',(e)=>{
